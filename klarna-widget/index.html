@@ -1,0 +1,94 @@
+<html>
+
+<head>
+	<title>Authorization</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
+</head>
+
+<body>
+	
+	<table  align="center" style="margin: 0px auto;">
+		<col width="250">
+		<col width="500">
+		<col width="200">
+		<tr>
+			<td>Client Token (Input)</td>
+			<td><input id="client_token"/></td>
+			<td><button class="init">Init</button></td>
+		</tr>
+		<tr>
+			<td>Widget Container</td>
+			<td height="500"><div id="klarna_container""></div></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Authorization Token (Output)</td>
+			<td><div id="token_container"></div></td>
+			<td><button class="authorize">Authorize</button></td>
+		</tr>
+	</table>
+
+	<script type="text/javascript">
+		$(function () {
+			$("button.init").on('click', function () {
+				{
+					$("#token_container").html("");
+					
+					Klarna.Payments.init({
+						client_token: $("#client_token").val()
+					});
+
+					Klarna.Payments.load({
+						container: '#klarna_container',
+						payment_method_category: 'pay_later'
+					}, function (res) {
+						console.log('Klarna.load returned')
+						console.debug(res);
+					})
+				}
+			})
+		}),
+
+			$(function () {
+				$("button.authorize").on('click', function () {
+					Klarna.Payments.authorize({
+						payment_method_category: 'pay_later'
+					}, {
+							order_lines: [{
+								"name": "Battery Power Pack",
+								"quantity": 1,
+								"unit_price": 1000,
+								"tax_rate": 0,
+								"total_amount": 1000,
+								"total_tax_amount": 0
+							}],
+							billing_address: {
+								"given_name": "John",
+								"family_name": "Lewis",
+								"email": "johnlewis@email.com",
+								"title": "Mr",
+								"street_address": "10 Cavendish Square",
+								"street_address2": "7th floor",
+								"postal_code": "W1G 0PW",
+								"city": "London",
+								"phone": "01895808221",
+								"country": "GB"
+							},
+							order_amount: 1000,
+							order_tax_amount: 0,
+						}, function (res) {
+							console.log('Authorize returned')
+							console.log(res)
+
+							$("#token_container").html("<strong>" + res.authorization_token + "</strong>");
+							$("button.place").removeAttr("disabled").attr("name", res.authorization_token);
+						})
+				})
+			})
+	</script>
+
+	
+</body>
+
+</html>
