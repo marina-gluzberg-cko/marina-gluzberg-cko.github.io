@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fomopay</title>
+        <script src="js/custom.js"></script>
+    </head>
+    <body onload="initFormValues()">
+        <form id="fomopayForm" name="fomopayForm" action="https://gateway.fomopay.com/pgw/v1" method="post">
+            <table> 
+                <tr> 
+                    <th>Parameter</th> 
+                    <th>Value</th> 
+                </tr> 
+                <tr> 
+                    <td>merchant</td> 
+                    <td><input id="merchant" name="merchant" value="10087584"></td> 
+                </tr> 
+                <tr> 
+                    <td>price</td> 
+                    <td><input id="price" name="price" value="0.01"></td> 
+                </tr> 
+                <tr> 
+                    <td>description</td> 
+                    <td><input id="description" name="description" value="A block of redstone."></td> 
+                </tr>
+                <tr> 
+                    <td>transaction</td> 
+                    <td><input id="transaction" name="transaction" readonly></td> 
+                </tr>
+                <tr> 
+                    <td>return_url</td> 
+                    <td><input id="return_url" name="return_url" value="http://www.example.com/return_url"></td> 
+                </tr>
+                <tr> 
+                    <td>callback_url</td> 
+                    <td><input id="callback_url" name="callback_url" value="http://checkout-apm.eu.ngrok.io/fomo/response"></td> 
+                </tr>
+                <tr> 
+                    <td>currency_code</td> 
+                    <td><input id="currency_code" name="currency_code" value="usd"></td> 
+                </tr>
+                <tr> 
+                    <td>type</td> 
+                    <td><input id="type" name="type" value="sale"></td> 
+                </tr>
+                <tr> 
+                    <td>timeout</td> 
+                    <td><input id="timeout" name="timeout" value="1800"></td> 
+                </tr>
+                <tr> 
+                    <td>nonce</td> 
+                    <td><input id="nonce" name="nonce" readonly></td> 
+                </tr>
+                <tr> 
+                    <td></td> 
+                    <td><input hidden id="signature" name="signature"></td> 
+                </tr>
+                <tr> 
+                    <td>upstreams</td> 
+                    <td><input id="upstreams" name="upstreams" value="wxpay"></td> 
+                </tr>
+            </table>
+
+        </form>
+
+        <input id="sendRew" type="button" value="Send Request" onclick="submitForm();" />
+
+    </body>
+</html>
