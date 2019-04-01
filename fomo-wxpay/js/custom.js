@@ -2,6 +2,7 @@ const API_USERNAME = '10087584';
 const API_SECRET = 'dK96BcIi0U9vKefqCscC8NTjoLMMML2NccTJKwiBWFdZyFwhqo9IoL3lBGgkeNxrBE4kch5SvsPAfrFqgIBJBWa';
 
 function initFormValues() {
+    document.getElementById('merchant').value = API_USERNAME;
     document.getElementById('transaction').value = Math.floor(Math.random() * 100000000);
     document.getElementById('nonce').value = Math.floor(Math.random() * 100000000);
 }
