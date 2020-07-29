@@ -1,0 +1,40 @@
+
+<html>
+<head>
+<title>BenefitPay | Test Web Integration Sample page</title>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="InApp.min.js"></script>
+
+</head>
+<body>
+<script>
+var benObj = {
+	merchantId:"9998888777", 
+	transactionAmount:"2.600", 
+	transactionCurrency:"BHD",
+	referenceNumber:"201923",
+	hashedString:"glnvd4ysirethwvtko57ag3fl0l2x1krmzpk35q3umybc",
+	appId:"3865241791",
+	secure_hash:"4yeHrOhnGKpptN/xwd2PgjIYUjN8DfvCngshmzoB7wA=", 
+	showResult:"0"
+};
+function successCallback(param) {
+	console.log(param);
+	InApp.close();
+	// Here do server side validation by calling the transaction status API
+	alert("Test Transaction Successful");
+}
+function errorCallback(param) {
+	console.log(param);
+	InApp.close();
+    alert("Test Transaction failed");
+}
+function closeCallback() {
+	alert("dialog closed");
+}
+</script>
+
+<button type="button" onclick="InApp.open(benObj,successCallback,errorCallback,closeCallback)" class="inapp-btn"></button>
+</body>
+</html>
