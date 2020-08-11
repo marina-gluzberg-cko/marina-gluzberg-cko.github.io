@@ -1,42 +1,134 @@
-
 <html>
-<head>
-<title>BenefitPay | Test Web Integration Sample page</title>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="InApp.min.js"></script>
+<header>
+    <title>BenefitPay Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="script/InApp.min.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-sha256.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.min.js"></script>
 
-</head>
-<body>
-<script>
-var benObj = {
-	merchantId:"9998888777", 
-	transactionAmount:"2.600", 
-	transactionCurrency:"BHD",
-	referenceNumber:"201923",
-	hashedString:"glnvd4ysirethwvtko57ag3fl0l2x1krmzpk35q3umybc",
-	appId:"3865241791",
-	secure_hash:"4yeHrOhnGKpptN/xwd2PgjIYUjN8DfvCngshmzoB7wA=", 
-	showResult:"0"
-};
-function successCallback(param) {
-	console.log(param);
-	InApp.close();
-	// Here do server side validation by calling the transaction status API
-	alert("Test Transaction Successful");
-}
-function errorCallback(param) {
-	console.log(param);
-	InApp.close();
-    alert("Test Transaction failed");
-}
-function closeCallback() {
-	alert("dialog closed");
-}
-</script>
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</header>
 
-<button type="button" onclick="InApp.open(benObj,successCallback,errorCallback,closeCallback)" class="inapp-btn"></button>
+<body onload="setValues()">
+    <h1>BenefitPay Demo</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3"><label for="merchantId">merchantId:</label></div> 
+            <div class="col-3"><input id="merchantId" value="9998888777"/></div> <!--10000199-->
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3"><label for="transactionAmount">transactionAmount:</label></div> 
+            <div class="col-3"><input id="transactionAmount" value="1000.000" /></div>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3"><label for="transactionCurrency">transactionCurrency:</label></div> 
+            <div class="col-3"><input id="transactionCurrency" value="BHD" /></div>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3"><label for="appId">appId:</label></div> 
+            <div class="col-3"><input id="appId" value="3865241791" /></div> <!--7547089408-->
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-3"><label for="referenceNumber">referenceNumber:</label></div> 
+            <div class="col-3"><input id="referenceNumber" value=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"></div>
+            <div class="col-3"><input type="button" class="inapp-btn" onclick="benpayOpen()" /></div> 
+        </div>
+    </div>
+
+    <div>
+		<label id="lblResult"></label>
+	</div>
+	<div>
+		<label id="lblResultParam"></label>
+	</div>
+
+    <script>
+		function setValues() {
+			$("#referenceNumber").val(getRndInteger(1000000,10000000));
+		}
+		function getRndInteger(min, max) {
+		  return Math.floor(Math.random() * (max - min) ) + min;
+		}
+        function benpayOpen() {
+            var input = {};
+            input.merchantId = $('#merchantId').val();
+            input.transactionAmount = $('#transactionAmount').val();
+            input.transactionCurrency = $('#transactionCurrency').val();
+            input.appId = $('#appId').val();
+            input.referenceNumber = $('#referenceNumber').val();
+            calcSecureHash(input);
+
+            console.log("Passing to InApp.open:");
+            console.log(input);
+            InApp.open(input, successCallback, errorCallback, closeCallback);
+        }
+
+        function calcSecureHash(input) {
+            const API_SECRET = "glnvd4ysirethwvtko57ag3fl0l2x1krmzpk35q3umybc"; <!--"y807cql0b230huuxxor9pd2hpckkqhyxl4dj06z1yopck";-->
+
+            var sortedValues =
+                Object.entries(input) 
+                    .filter(kv => kv[1]) 
+                    .map(kv => kv[0] + '="' + kv[1] + "\"") 
+                    .sort();  
+
+            var hashStr = sortedValues.join(',');
+
+            var hash = CryptoJS.HmacSHA256(hashStr, API_SECRET);
+            var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+
+            console.log("input: ");
+            console.log(input);
+            console.log("hashStr: " + hashStr);
+            console.log("hash: " + hash);
+            console.log("hashInBase64: " + hashInBase64);
+
+            input.hashedString = API_SECRET; // hash;          
+            input.secure_hash = hashInBase64;
+        }
+
+		function successCallback(param) {
+			console.log(param);
+			InApp.close();
+			// Here do server side validation by calling the transaction status API
+			alert("Test Transaction Successful");
+			
+			
+			$('#lblResult').text("Test Transaction Successful");
+			$('#lblResultParam').text(JSON.stringify(param));
+		}
+		function errorCallback(param) {
+			console.log(param);
+			InApp.close();
+			alert("Test Transaction failed");
+			
+			
+			$('#lblResult').text("Test Transaction failed");
+			$('#lblResultParam').text(JSON.stringify(param));
+		}
+		function closeCallback() {
+			alert("dialog closed");
+		}
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
