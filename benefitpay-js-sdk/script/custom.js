@@ -26,7 +26,7 @@ goDeep = function(){
 
     //window.postMessage(messageDummy, '*');
 
-    let link = "benefitinapp://cwinappdeeplinking?=" +
+    let link = "https://benefit.bh/?inapp&" +
                             "app_id=3865241791&" +
                             "merchant_id=9998888777&" +
                             "qrdata=0002010102120510999888877749460008mobi.foo01109998888777021010000000010402db52041123530304854081000.0005802BH5917Test+Web+Checkout6003Web6228050742216430713201386524179163049DFE&" +
