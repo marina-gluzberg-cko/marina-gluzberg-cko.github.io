@@ -1,0 +1,60 @@
+
+<html>
+<head>
+<title>BenefitPay | Test Web Integration Sample page</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="InApp.min.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+<script>
+var benObj = {
+	merchantId:"9998888777", 
+	transactionAmount:"2.600", 
+	transactionCurrency:"BHD",
+	referenceNumber:"201923",
+	hashedString:"glnvd4ysirethwvtko57ag3fl0l2x1krmzpk35q3umybc",
+	appId:"3865241791",
+	secure_hash:"4yeHrOhnGKpptN/xwd2PgjIYUjN8DfvCngshmzoB7wA=", 
+	showResult:"0"
+};
+function successCallback(param) {
+	console.log(param);
+	InApp.close();
+	// Here do server side validation by calling the transaction status API
+	alert("Test Transaction Successful");
+	
+	
+	$('#lblResult').text("Test Transaction Successful");
+	$('#lblResultParam').text(JSON.stringify(param));
+}
+function errorCallback(param) {
+	console.log(param);
+	InApp.close();
+    alert("Test Transaction failed");
+	
+	
+	$('#lblResult').text("Test Transaction failed");
+	$('#lblResultParam').text(JSON.stringify(param));
+}
+function closeCallback() {
+	alert("dialog closed");
+}
+</script>
+
+<button type="button" onclick="InApp.open(benObj,successCallback,errorCallback,closeCallback)" class="inapp-btn"></button>
+
+<a href src="https://benefit.bh/?inapp&app_id=3865241791&merchant_id=9998888777&qrdata=0002010102120510999888877749460008mobi.foo01109998888777021010000000010402db52041123530304854081000.0005802BH5917Test+Web+Checkout6003Web6228050742216430713201386524179163049DFE&referenceNumber=4221643&hashedString=4VfglMTCVxoQr8MLIgtk9OLosbmU7G1tSu+SDWJNqjY%3D&amount=1000.000&paymentType=web&showResult=0">
+Test link
+</a>
+<div>
+	<label id="lblResult"></label>
+</div>
+<div>
+	<label id="lblResultParam"></label>
+</div>
+</body>
+</html>
