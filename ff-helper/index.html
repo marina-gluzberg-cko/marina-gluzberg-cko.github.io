@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="styles/style.css">
+
+    <title>Firefighting Helper</title>
+    
+    <script src="scripts/custom/urlBuilder.js"></script>
+
+    <script src="scripts/bridge/bridge.js"></script>
+    <script src="scripts/bridge/bridge.console.js"></script>
+    <script src="scripts/bridge/bridge.meta.js"></script>
+    <script src="scripts/bridge/uuid-encoding.AMD.js"></script>
+    <script src="scripts/bridge/uuid-encoding.AMD.meta.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+  </head>
+  <body>
+    <h1 class="display-1 text-center">🚒 Firefighting Helper</h1>
+
+    <div class="container" id="payment">
+        <div class="input-group mt-5">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Payment ID (pay_)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="paymentId">
+        </div>
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Payment Reference (Guid)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="paymentReference" readonly>
+        </div>
+    </div>
+    
+    <div class="container" id="paymentUrls">
+        <div class="row mt-3">
+            <div class="col-sm"><button class="btn btn-secondary btn-lg btn-block" onclick="goToUrlByPayment('qa', 'seq')">QA SEQ</button></div>
+            <div class="col-sm"><button class="btn btn-success btn-lg btn-block" onclick="goToUrlByPayment('sandbox', 'seq')">Sandbox SEQ</button></div>
+            <div class="col-sm"><button class="btn btn-primary btn-lg btn-block" onclick="goToUrlByPayment('prod', 'seq')">PROD SEQ</button></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm"><button class="btn btn-secondary btn-lg btn-block" onclick="goToUrlByPayment('qa', 'kibana')">QA Kibana</button></div>
+            <div class="col-sm"><button class="btn btn-success btn-lg btn-block" onclick="goToUrlByPayment('sandbox', 'kibana')">Sandbox Kibana</button></div>
+            <div class="col-sm"><button class="btn btn-primary btn-lg btn-block" onclick="goToUrlByPayment('prod', 'kibana')">PROD Kibana</button></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm"><button class="btn btn-secondary btn-lg btn-block" onclick="goToUrlByPayment('qa', 'evs')">QA EVS</button></div>
+            <div class="col-sm"><button class="btn btn-success btn-lg btn-block" onclick="goToUrlByPayment('sandbox', 'evs')">Sandbox EVS</button></div>
+            <div class="col-sm"><button class="btn btn-primary btn-lg btn-block" onclick="goToUrlByPayment('prod', 'evs')">PROD EVS</button></div>
+        </div>
+    </div>
+
+    <div class="container" id="correlation">
+        <div class="input-group mt-5">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Correlation ID</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="correlationId">
+        </div>
+    </div>  
+    
+    <div class="container" id="correlationUrls">
+            <div class="row mt-3">
+                <div class="col-sm"><button class="btn btn-secondary btn-lg btn-block" onclick="goToUrlByCorrelation('qa', 'seq')">QA SEQ</button></div>
+                <div class="col-sm"><button class="btn btn-success btn-lg btn-block" onclick="goToUrlByCorrelation('sandbox', 'seq')">Sandbox SEQ</button></div>
+                <div class="col-sm"><button class="btn btn-primary btn-lg btn-block" onclick="goToUrlByCorrelation('prod', 'seq')">PROD SEQ</button></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm"><button class="btn btn-secondary btn-lg btn-block" onclick="goToUrlByCorrelation('qa', 'kibana')">QA Kibana</button></div>
+                <div class="col-sm"><button class="btn btn-success btn-lg btn-block" onclick="goToUrlByCorrelation('sandbox', 'kibana')">Sandbox Kibana</button></div>
+                <div class="col-sm"><button class="btn btn-primary btn-lg btn-block" onclick="goToUrlByCorrelation('prod', 'kibana')">PROD Kibana</button></div>
+            </div>
+        </div>
+
+
+    <script>
+        $(document).ready(function() {
+            $("#paymentUrls :button").attr('disabled', 'true');
+            $("#correlationUrls :button").attr('disabled', 'true');
+        });
+
+        $('#paymentId').keypress(function(event) {
+            let paymentId = $("#paymentId").val();
+            let paymentReference = "";
+
+            if (paymentId.length == 30 && paymentId.startsWith("pay_")) {
+                paymentReference = Base32Guid.Decode(paymentId.replace("pay_", "")); 
+                $("#paymentUrls :button").removeAttr('disabled');
+            } else {       
+                $("#paymentUrls :button").attr('disabled', 'true');
+            }
+
+            $("#paymentReference").val(paymentReference); 
+        });
+
+        $('#correlationId').keypress(function(event) {
+            let correlationId = $("#correlationId").val();
+
+            if (correlationId.length == 36) {
+                $("#correlationUrls :button").removeAttr('disabled');
+            } else {
+                $("#correlationUrls :button").attr('disabled', 'true');
+            }
+        });
+
+        function goToUrlByPayment(env, resource) {
+            var paymentId = $("#paymentId").val();
+            var paymentReference = $("#paymentReference").val();
+
+            window.open(getUrlByPayment(env, resource, paymentId, paymentReference), '_blank');
+        }
+
+        function goToUrlByCorrelation(env, resource) {
+            var correlationId = $("#correlationId").val();
+
+            window.open(getUrlByCorrelation(env, resource, correlationId), '_blank');
+        }
+    </script>
+
+    </body>
+</html>
